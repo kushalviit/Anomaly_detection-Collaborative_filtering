@@ -43,12 +43,26 @@ Theta_grad = zeros(size(Theta));
 
 
 
+for i=1:num_movies
+   for j=1:num_users 
+      if(R(i,j)==1)
+       y_pred=Theta(j,:)*X(i,:)';
+       J+=((y_pred-Y(i,j))^2); 
+       for k=1:length(Theta(j,:))
+          Theta_grad(j,k)+=((y_pred-Y(i,j))*X(i,k));
+       end
+       for k=1:length(X(i,:))
+          X_grad(i,k)+=((y_pred-Y(i,j))*Theta(j,k));
+       end
+      end
+   end
+end
+
+J=(J/2)+((lambda/2)*sum(sum(Theta.^2)))+((lambda/2)*sum(sum(X.^2)));
 
 
-
-
-
-
+Theta_grad+=(lambda.*Theta);
+X_grad+=(lambda.*X);
 
 
 
